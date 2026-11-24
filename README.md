@@ -1,6 +1,6 @@
 # Note Service
 
-Full-stack сервис заметок с совместным доступом (роли reader/editor), архивом.
+Full-stack сервис заметок с архивом.
 
 ## Стек
 - **Frontend:** React (Vite) + TypeScript, TailwindCSS, TanStack Query
