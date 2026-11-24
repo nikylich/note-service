@@ -1,6 +1,6 @@
 # Note Service
-всё сделано в 
-Full-stack сервис заметок с архивом.
+всё сделано в Codespace
+Full-stack сервис заметок с архивом и кнопкой поделиться.
 
 ## Стек
 - **Frontend:** React (Vite) + TypeScript, TailwindCSS, TanStack Query
