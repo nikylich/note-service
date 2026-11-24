@@ -1,0 +1,68 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id           Int         @id @default(autoincrement())
+  email        String      @unique
+  passwordHash String      @map("password_hash")
+  name         String
+  createdAt    DateTime    @default(now()) @map("created_at")
+  notes        Note[]      @relation("owner")
+  tags         Tag[]
+  shares       NoteShare[]
+}
+
+model Note {
+  id        Int         @id @default(autoincrement())
+  ownerId   Int         @map("owner_id")
+  owner     User        @relation("owner", fields: [ownerId], references: [id], onDelete: Cascade)
+  title     String
+  content   String      @default("")
+  color     String      @default("yellow")
+  status    String      @default("active")
+  deletedAt DateTime?   @map("deleted_at")
+  createdAt DateTime    @default(now()) @map("created_at")
+  updatedAt DateTime    @updatedAt @map("updated_at")
+  tags      NoteTag[]
+  shares    NoteShare[]
+
+  @@index([ownerId, status])
+}
+
+model Tag {
+  id      Int       @id @default(autoincrement())
+  ownerId Int       @map("owner_id")
+  owner   User      @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  name    String
+  notes   NoteTag[]
+
+  @@unique([ownerId, name])
+}
+
+model NoteTag {
+  noteId Int  @map("note_id")
+  tagId  Int  @map("tag_id")
+  note   Note @relation(fields: [noteId], references: [id], onDelete: Cascade)
+  tag    Tag  @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([noteId, tagId])
+  @@index([tagId])
+}
+
+model NoteShare {
+  id        Int      @id @default(autoincrement())
+  noteId    Int      @map("note_id")
+  userId    Int      @map("user_id")
+  role      String
+  createdAt DateTime @default(now()) @map("created_at")
+  note      Note     @relation(fields: [noteId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([noteId, userId])
+  @@index([userId])
+}
